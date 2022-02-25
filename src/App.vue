@@ -1,30 +1,27 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+  <div id="app">
+    <router-view/>
   </div>
-  <router-view/>
+
 </template>
+<script>
+export default {}
+document.addEventListener('DOMContentLoaded', () => {
+  const html = document.querySelector('html')
+  // 屏幕的宽度除以10，获取根元素fontSize标准
+  let fontSize = window.innerWidth / 10
+// 获取到的 fontSize 标准不允许超过我们定义的最大值
+  fontSize = fontSize > 50 ? 50 : fontSize
+  // 定义根元素 大小
+  html.style.fontSize = fontSize + 'px'
+})
+</script>
 
-<style>
+<style scoped>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
