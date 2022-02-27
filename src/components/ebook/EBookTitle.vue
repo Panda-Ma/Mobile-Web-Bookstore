@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
-@import "../../assets/style/global";
+@import "../../assets/styles/global";
 
 .title-wrapper {
   position: absolute;

@@ -32,6 +32,7 @@
 <script>
 import {ebookMixin} from "@/utils/mixin";
 import {FONT_SIZE_LIST} from "@/utils/book";
+import {saveFontSize} from "@/utils/localStorage";
 
 export default {
   name: "EBookSettingFont",
@@ -43,7 +44,10 @@ export default {
   },
   methods: {
     setFontSize(fontSize) {
+      //保存到vuex
       this.setDefaultFontSize(fontSize)
+      //保存到local Storage
+      saveFontSize(this.fileName,fontSize)
       this.currentBook.rendition.themes.fontSize(fontSize)
     },
     showFontFamilyPopup() {
@@ -54,7 +58,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "~@/assets/style/global.scss";
+@import "~@/assets/styles/global.scss";
 
 .setting-wrapper {
   position: absolute;

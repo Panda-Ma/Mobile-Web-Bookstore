@@ -1,5 +1,5 @@
-// import { getReadTime } from './localStorage'
-// import { realPx } from './utils'
+import { getReadTime } from './localStorage'
+import { realPx } from './utils'
 
 export const FONT_SIZE_LIST = [
     { fontSize: 12 },
@@ -109,3 +109,4 @@ export function getReadTimeByMinute(fileName) {
 export function flatten(array) {
     return [].concat(...array.map(item => [].concat(item, ...flatten(item.subitems))))
 }
+

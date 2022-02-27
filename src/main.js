@@ -2,8 +2,9 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import './assets/style/icon.css'
+import i18n from "@/lang";
+import './assets/styles/icon.css'
 import './assets/font/daysOne.css'
-import './assets/style/global.scss'
+import './assets/styles/global.scss'
 
-createApp(App).use(store).use(router).mount('#app')
+createApp(App).use(store).use(router).use(i18n).mount('#app')
