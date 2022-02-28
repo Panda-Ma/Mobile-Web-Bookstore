@@ -15,7 +15,6 @@ const messages={
 }
 let locale=getLocale()
 if(!locale){
-    window.alert(locale)
     locale='cn'
     saveLocale(locale)
 }

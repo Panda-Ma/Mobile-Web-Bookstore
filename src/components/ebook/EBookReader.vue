@@ -9,7 +9,7 @@ import {ebookMixin} from "@/utils/mixin";
 import Epub from 'epubjs'
 import {
   getFontFamily,
-  getFontSize, getTheme,
+  getFontSize, getLocation, getTheme,
   saveFontFamily,
   saveFontSize, saveTheme
 } from "@/utils/localStorage";
@@ -24,13 +24,17 @@ export default {
   methods: {
     prevPage() {
       if (this.rendition) {
-        this.rendition.prev()
+        this.rendition.prev().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },
     nextPage() {
       if (this.rendition) {
-        this.rendition.next()
+        this.rendition.next().then(() => {
+          this.refreshLocation()
+        })
         this.hideTitleAndMenu()
       }
     },
@@ -57,11 +61,14 @@ export default {
 
       this.initRendition()
       this.initGesture()
-    //  分页功能需要在书籍解析完成后
-      this.book.ready.then(()=>{
+
+      //  分页功能需要在书籍解析完成后
+      this.book.ready.then(() => {
         return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))
-      }).then(()=>{
+      }).then(() => {
         this.setBookAvailable(true)
+        //虽然eBookReader中调用了refreshLocation，但是在分页功能加载完毕后才能调用成功
+        this.refreshLocation()
       })
 
 
@@ -120,13 +127,13 @@ export default {
         width: innerWidth,
         height: innerHeight,
         method: 'default',
-        // flow: "paginated",
-        // manager: "continuous",
-        // snap: true
       })
 
-      //display之后会返回一个promise对象
-      this.rendition.display().then(() => {
+      //获取local Storage中的进度
+      const location=getLocation(this.fileName)
+
+      this.display(location, () => {
+        // 由于没有promise接口，这里利用箭头函数作为参数传入
         /**
          * 没有该操作，刷新页面会无法保存字体样式的设置
          */
@@ -135,6 +142,8 @@ export default {
         this.initFontSize()
         this.initGlobalStyle()
       })
+
+
 
       //在字体面板切换字体样式时需要挂载css文件，以link形式
       /**
@@ -151,7 +160,7 @@ export default {
           contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/font/montserrat.css`),
           contents.addStylesheet(`${process.env.VUE_APP_RES_URL}/font/tangerine.css`),
         ]).then(() => {
-          console.log('success');
+          // console.log('success');
         })
 
       })
@@ -178,7 +187,8 @@ export default {
         //阻止事件传播
         event.stopPropagation()
       })
-    }
+    },
+
   },
   mounted() {
     const fileName = this.$route.params.fileName.split('|').join('/')
