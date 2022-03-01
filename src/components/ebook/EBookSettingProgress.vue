@@ -34,25 +34,19 @@
 
 <script>
 import {ebookMixin} from "@/utils/mixin";
-import {getReadTimeByMinute} from "@/utils/book";
+
 
 export default {
   name: "EBookSettingProgress",
   mixins: [ebookMixin],
   computed: {
+    //获取章节名称
     getSectionName() {
-      if (this.section) {
-        const sectionInfo = this.currentBook.section(this.section)
-        if (sectionInfo && sectionInfo.href) {
-          return this.currentBook.navigation.get(sectionInfo.href).label
-        }
-      }
+      return this.section?this.navigation[this.section].label:''
     }
   },
   methods: {
-    getReadTimeText() {
-      return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.fileName))
-    },
+
     prevSection() {
       //章节大于0且书籍加载完毕
       if (this.section > 0 && this.bookAvailable) {

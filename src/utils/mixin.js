@@ -1,5 +1,5 @@
 import {mapGetters, mapActions} from "vuex";
-import {addCss, removeAllCss, themeList} from "@/utils/book";
+import {addCss, getReadTimeByMinute, removeAllCss, themeList} from "@/utils/book";
 import {saveLocation} from "@/utils/localStorage";
 
 export const ebookMixin = {
@@ -78,16 +78,18 @@ export const ebookMixin = {
         //点击上下一章时需要刷新进度条百分比
         refreshLocation() {
             const currentLocation = this.currentBook.rendition.currentLocation()
-            //startCfi为当前进度
-            const startCfi = currentLocation.start.cfi
-            //将当前章节的开始位置 或者 当前位置转化为书籍的进度百分比
-            const progress = this.currentBook.locations.percentageFromCfi(startCfi)
-            //progress保存到vuex
-            this.setProgress(Math.floor(progress * 100))
-            //section保存到vuex
-            this.setSection(currentLocation.start.index)
-            //保存到local Storage
-            saveLocation(this.fileName,startCfi)
+            if (currentLocation&&currentLocation.start) {
+                //startCfi为当前进度
+                const startCfi = currentLocation.start.cfi
+                //将当前章节的开始位置 或者 当前位置转化为书籍的进度百分比
+                const progress = this.currentBook.locations.percentageFromCfi(startCfi)
+                //progress保存到vuex
+                this.setProgress(Math.floor(progress * 100))
+                //section保存到vuex
+                this.setSection(currentLocation.start.index)
+                //保存到local Storage
+                saveLocation(this.fileName, startCfi)
+            }
         },
         display(target,cb){
             if(target) {
@@ -102,6 +104,15 @@ export const ebookMixin = {
                 this.refreshLocation()
                 if(cb)cb()
             })
-        }
+        },
+        hideTitleAndMenu() {
+            // this.$store.dispatch('setMenuVisible',false)
+            this.setMenuVisible(false)
+            this.setSettingVisible(-1)
+            this.setFontFamilyVisible(false)
+        },
+        getReadTimeText() {
+            return this.$t('book.haveRead').replace('$1', getReadTimeByMinute(this.fileName))
+        },
     }
 }

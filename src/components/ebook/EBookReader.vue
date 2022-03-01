@@ -13,6 +13,7 @@ import {
   saveFontFamily,
   saveFontSize, saveTheme
 } from "@/utils/localStorage";
+import {flatten} from "@/utils/book";
 
 
 global.ePub = Epub
@@ -45,12 +46,7 @@ export default {
       this.setSettingVisible(-1)
       this.setFontFamilyVisible(false)
     },
-    hideTitleAndMenu() {
-      // this.$store.dispatch('setMenuVisible',false)
-      this.setMenuVisible(false)
-      this.setSettingVisible(-1)
-      this.setFontFamilyVisible(false)
-    },
+
     initEpub() {
       //this.fileName是computed中的mappGetters通过Getter取到的
       const url = `${process.env.VUE_APP_RES_URL}/epub/` + this.fileName + '.epub'
@@ -61,6 +57,7 @@ export default {
 
       this.initRendition()
       this.initGesture()
+      this.parseBook()
 
       //  分页功能需要在书籍解析完成后
       this.book.ready.then(() => {
@@ -130,7 +127,7 @@ export default {
       })
 
       //获取local Storage中的进度
-      const location=getLocation(this.fileName)
+      const location = getLocation(this.fileName)
 
       this.display(location, () => {
         // 由于没有promise接口，这里利用箭头函数作为参数传入
@@ -142,7 +139,6 @@ export default {
         this.initFontSize()
         this.initGlobalStyle()
       })
-
 
 
       //在字体面板切换字体样式时需要挂载css文件，以link形式
@@ -189,6 +185,43 @@ export default {
       })
     },
 
+
+    //下方菜单栏的目录面板
+    parseBook() {
+      //解析封面图片
+      this.book.loaded.cover.then(cover => {
+        this.book.archive.createUrl(cover).then(url => {
+          this.setCover(url)
+        })
+      })
+
+      //解析书籍信息
+      this.book.loaded.metadata.then(metadata => {
+        this.setMetadata(metadata)
+      })
+
+      //解析目录
+      this.book.loaded.navigation.then(nav => {
+        const navItem = flatten(nav.toc)
+
+        //查找一个索引为第几级目录
+        function find(item, level = 0) {
+          //如果一个索引存在父节点，则查找该父节点
+          let getParent = item => navItem.filter(parentItem => parentItem.id === item.parent)[0]
+
+          return !item.parent ? level : find(getParent(item), ++level)
+        }
+
+        //标注一维数组的每个索引 为 第几级目录
+        navItem.forEach(item => {
+          item.level = find(item)
+        })
+
+        this.setNavigation(navItem)
+      })
+
+
+    }
   },
   mounted() {
     const fileName = this.$route.params.fileName.split('|').join('/')

@@ -106,6 +106,8 @@ export function getReadTimeByMinute(fileName) {
     }
 }
 
+//将一个树状的数组合并成一个一维数组
+//递归
 export function flatten(array) {
     return [].concat(...array.map(item => [].concat(item, ...flatten(item.subitems))))
 }
