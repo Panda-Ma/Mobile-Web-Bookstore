@@ -68,7 +68,9 @@ import {px2rem} from "@/utils/utils";
 
 export default {
   name: "EBookSlideContents",
-  components: {Scroll},
+  components: {
+    Scroll
+  },
   mixins: [ebookMixin],
   data() {
     return {
@@ -92,11 +94,12 @@ export default {
         marginLeft: `${px2rem(item.level * 15)}rem`
       }
     },
-    displayContent(target,highlight=false) {
+    displayContent(target, highlight = false) {
       this.display(target, () => {
+        //点击搜索的结果发生跳转时，需要隐藏
         this.hideTitleAndMenu()
         //搜索界面点击跳转之后，书籍内容中的关键字高亮显示
-        if(highlight){
+        if (highlight) {
           this.currentBook.rendition.annotations.highlight(target)
         }
       })

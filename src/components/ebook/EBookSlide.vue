@@ -21,7 +21,7 @@
             </div>
           </div>
           <div class="content-empty" v-else>
-            <ebook-loading></ebook-loading>
+            <e-book-loading></e-book-loading>
           </div>
         </div>
       </transition>
@@ -32,16 +32,21 @@
 </template>
 
 <script>
+import {markRaw} from "vue";
 import {ebookMixin} from "@/utils/mixin";
 import EBookSlideContents from "@/components/ebook/EBookSlideContents";
+import EBookLoading from "@/components/ebook/EBookLoading";
+
+
 
 export default {
   name: "EBookSlide",
   mixins:[ebookMixin],
+  components:{EBookLoading},
   data(){
     return {
       currentTab:1,
-      content:EBookSlideContents,
+      content:markRaw(EBookSlideContents),
       bookmark:null
     }
   },

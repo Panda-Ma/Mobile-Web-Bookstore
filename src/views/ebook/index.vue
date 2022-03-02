@@ -1,8 +1,10 @@
 <template>
- <div class="ebook"></div>
-  <e-book-title/>
-  <e-book-reader></e-book-reader>
-  <e-book-menu/>
+ <div class="ebook">
+   <e-book-title/>
+   <e-book-reader></e-book-reader>
+   <e-book-menu/>
+ </div>
+
 </template>
 
 <script>
