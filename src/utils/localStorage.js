@@ -6,6 +6,7 @@ export function setLocalStorage(key,value){
     return localStorage.set(key,value)
 }
 
+//得到一本书的全部记录
 export function getLocalStorage(key){
     return localStorage.get(key)
 }
@@ -25,6 +26,7 @@ export function setBookObject(fileName,key,value){
     setLocalStorage(`${fileName}-info`,book)
 }
 
+//获取一本书的指定使用记录
 export function getBookObject(fileName,key){
     let book=getLocalStorage(`${fileName}-info`)
     if(book)return book[key]

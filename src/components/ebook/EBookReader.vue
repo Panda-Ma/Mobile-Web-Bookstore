@@ -1,6 +1,12 @@
 <template>
   <div class="ebook-reader">
     <div id="read"></div>
+    <div class="ebook-reader-mask"
+         @click="onMaskClick"
+         @touchmove="move"
+         @touchend="moveEnd">
+
+    </div>
   </div>
 </template>
 
@@ -56,7 +62,7 @@ export default {
       this.setCurrentBook(this.book)
 
       this.initRendition()
-      this.initGesture()
+      // this.initGesture()
       this.parseBook()
 
       //  分页功能需要在书籍解析完成后
@@ -161,32 +167,34 @@ export default {
 
       })
     },
-    initGesture() {
-      //手势操作
-      this.rendition.on('touchstart', event => {
-        this.touchStartX = event.changedTouches[0].clientX
-        this.touchStartTime = event.timeStamp
-      })
-      this.rendition.on('touchend', event => {
-        const offsetX = event.changedTouches[0].clientX - this.touchStartX
-        const time = event.timeStamp - this.touchStartTime
-        // console.log(offsetX, time)
-        if (time < 500 && offsetX > 40) {
-          this.prevPage()
-        } else if (time < 500 && offsetX < -40) {
-          this.nextPage()
-        } else {
-          this.toggleTitleAndMenu()
-        }
-        //阻止默认事件
-        event.preventDefault()
-        //阻止事件传播
-        event.stopPropagation()
-      })
-    },
+
+    //因为无法epubjs实现上拉，所以需要重新编写左滑、右滑、和上拉操作
+    // initGesture() {
+    //   //手势操作
+    //   this.rendition.on('touchstart', event => {
+    //     this.touchStartX = event.changedTouches[0].clientX
+    //     this.touchStartTime = event.timeStamp
+    //   })
+    //   this.rendition.on('touchend', event => {
+    //     const offsetX = event.changedTouches[0].clientX - this.touchStartX
+    //     const time = event.timeStamp - this.touchStartTime
+    //     // console.log(offsetX, time)
+    //     if (time < 500 && offsetX > 40) {
+    //       this.prevPage()
+    //     } else if (time < 500 && offsetX < -40) {
+    //       this.nextPage()
+    //     } else {
+    //       this.toggleTitleAndMenu()
+    //     }
+    //     //阻止默认事件
+    //     event.preventDefault()
+    //     //阻止事件传播
+    //     event.stopPropagation()
+    //   })
+    // },
 
 
-    //下方菜单栏的目录面板
+    //下方菜单栏的目录面板解析
     parseBook() {
       //解析封面图片
       this.book.loaded.cover.then(cover => {
@@ -221,7 +229,39 @@ export default {
       })
 
 
-    }
+    },
+
+    //手势操作重新编写
+    onMaskClick(e) {
+      //x轴上的偏移量
+      const offsetX = e.offsetX
+      const width = window.innerWidth
+      //单击可以上下一页
+      if (offsetX > 0 && offsetX < width * 0.3) this.prevPage()
+      else if (offsetX > 0 && offsetX > width * 0.7) this.nextPage()
+      else this.toggleTitleAndMenu()
+    },
+
+    //下滑操作
+    move(e) {
+      let offsetY = 0
+      //client浏览器视口内部的坐标
+      if (this.firstOffsetY) {
+        offsetY = e.changedTouches[0].clientY - this.firstOffsetY
+        this.setOffsetY(offsetY)
+      } else {
+        this.firstOffsetY = e.changedTouches[0].clientY
+      }
+      e.preventDefault()
+      e.stopPropagation()
+    },
+
+    //结束下滑滑动时重置属性
+    moveEnd(e) {
+      this.setOffsetY(0)
+      this.firstOffsetY = null
+    },
+
   },
   mounted() {
     const fileName = this.$route.params.fileName.split('|').join('/')
@@ -233,6 +273,23 @@ export default {
 }
 </script>
 
-<style scoped>
 
+<style lang="scss" rel="stylesheet/scss" scoped>
+@import "../../assets/styles/global";
+
+.ebook-reader {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  .ebook-reader-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: transparent;
+    z-index: 150;
+    width: 100%;
+    height: 100%;
+  }
+}
 </style>

@@ -36,6 +36,7 @@ import {markRaw} from "vue";
 import {ebookMixin} from "@/utils/mixin";
 import EBookSlideContents from "@/components/ebook/EBookSlideContents";
 import EBookLoading from "@/components/ebook/EBookLoading";
+import EBookSlideBookmark from "@/components/ebook/EBookSlideBookmark";
 
 
 
@@ -47,7 +48,7 @@ export default {
     return {
       currentTab:1,
       content:markRaw(EBookSlideContents),
-      bookmark:null
+      bookmark:EBookSlideBookmark
     }
   },
   methods:{
