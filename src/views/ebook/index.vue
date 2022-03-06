@@ -1,9 +1,11 @@
 <template>
   <div class="ebook" ref="ebook">
+    <EBookHeader/>
     <e-book-title/>
     <e-book-reader></e-book-reader>
     <e-book-menu/>
     <e-book-bookmark/>
+    <e-book-footer/>
   </div>
 
 </template>
@@ -15,11 +17,13 @@ import EBookMenu from "@/components/ebook/EBookMenu";
 import {getReadTime, saveReadTime} from "@/utils/localStorage";
 import {ebookMixin} from "@/utils/mixin";
 import EBookBookmark from "@/components/ebook/EBookBookmark";
+import EBookHeader from "@/components/ebook/EBookHeader";
+import EBookFooter from "@/components/ebook/EBookFooter";
 
 export default {
   name: "index",
   mixins: [ebookMixin],
-  components: {EBookBookmark, EBookMenu, EBookTitle, EBookReader},
+  components: {EBookFooter, EBookHeader, EBookBookmark, EBookMenu, EBookTitle, EBookReader},
   methods: {
     //记录阅读时间
     startLoopReadTime() {

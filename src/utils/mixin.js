@@ -28,9 +28,11 @@ export const ebookMixin = {
         themeList() {
             return themeList(this)
         },
-        // getSectionName() {
-        //     return this.section ? this.navigation[this.section].label : ''
-        // }
+
+       // 获取章节名称
+        getSectionName() {
+            return this.section ? this.navigation[this.section].label : ''
+        }
     },
     methods: {
         ...mapActions([
@@ -78,7 +80,7 @@ export const ebookMixin = {
         //点击上下一章时需要刷新进度条百分比
         refreshLocation() {
             const currentLocation = this.currentBook.rendition.currentLocation()
-            if (currentLocation&&currentLocation.start) {
+            if (currentLocation && currentLocation.start) {
                 //startCfi为当前进度
                 const startCfi = currentLocation.start.cfi
                 //将当前章节的开始位置 或者 当前位置转化为书籍的进度百分比
@@ -91,30 +93,29 @@ export const ebookMixin = {
                 saveLocation(this.fileName, startCfi)
 
                 //保存每一页的书签
-                const bookmark=getBookmark(this.fileName)
-                if(bookmark){
-                    if(bookmark.some(item=>item.cfi===startCfi)){
+                const bookmark = getBookmark(this.fileName)
+                if (bookmark) {
+                    if (bookmark.some(item => item.cfi === startCfi)) {
                         this.setIsBookmark(true)
-                    }else{
+                    } else {
                         this.setIsBookmark(false)
                     }
-                }else{
+                } else {
                     this.setIsBookmark(false)
                 }
             }
         },
-        display(target,cb){
-            if(target) {
+        display(target, cb) {
+            if (target) {
                 //利用传入的位置参数，epubjs可以将书籍跳转到指定页数，同时会修改this.currentBook中的位置参数
                 this.currentBook.rendition.display(target).then(() => {
                     this.refreshLocation()
                     //如果需要执行回调函数
                     if (cb) cb()
                 })
-            }
-            else  this.currentBook.rendition.display().then(()=>{
+            } else this.currentBook.rendition.display().then(() => {
                 this.refreshLocation()
-                if(cb)cb()
+                if (cb) cb()
             })
         },
         hideTitleAndMenu() {

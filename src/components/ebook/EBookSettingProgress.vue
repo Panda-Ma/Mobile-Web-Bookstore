@@ -39,12 +39,6 @@ import {ebookMixin} from "@/utils/mixin";
 export default {
   name: "EBookSettingProgress",
   mixins: [ebookMixin],
-  computed: {
-    //获取章节名称
-    getSectionName() {
-      return this.section?this.navigation[this.section].label:''
-    }
-  },
   methods: {
 
     prevSection() {

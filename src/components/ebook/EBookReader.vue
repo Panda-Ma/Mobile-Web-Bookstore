@@ -4,8 +4,11 @@
     <div class="ebook-reader-mask"
          @click="onMaskClick"
          @touchmove="move"
-         @touchend="moveEnd">
-
+         @touchend="moveEnd"
+         @mousedown.left="onMouseEnter"
+         @mousemove.left="onMouseMove"
+         @mouseup.left="onMouseEnd">
+      <!--touchmove事件需要按住才生效，鼠标的mousemove事件只要移动就会生效，但是手机和电脑都会触发onMaskClick-->
     </div>
   </div>
 </template>
@@ -68,7 +71,47 @@ export default {
       //  分页功能需要在书籍解析完成后
       this.book.ready.then(() => {
         return this.book.locations.generate(750 * (window.innerWidth / 375) * (getFontSize(this.fileName) / 16))
-      }).then(() => {
+      }).then(locations => {
+
+        /**
+         * 分页算法的简单实现，但是一般都交由后端处理，真实的分页算法很复杂
+         * locations是分页信息
+         * navigation是目录信息
+         */
+        //navigation中添加pagelist属性，初始化pagelist
+        this.navigation.forEach(nav => {
+          nav.pagelist = []
+        })
+
+        locations.forEach(item => {
+          const loc = item.match(/\[(.*)\]!/)[1]
+
+          this.navigation.forEach(nav => {
+            if (nav.href) {
+              //xxx.html
+              const href = nav.href.match(/^(.*)\.html$/)[1]
+              if (href === loc) {
+                nav.pagelist.push(item)
+              }
+            }
+          })
+
+          //这里已经把每一章的分页放到navigation中，但是接下来需要计算章节开始的页数所在
+          let currentPage = 1
+          this.navigation.forEach((nav,index)=>{
+            //第一章从第一页开始
+            if(index===0)nav.page=1
+            //加上 上一章的页数
+            else nav.page=currentPage
+            currentPage+=nav.pagelist.length+1
+          })
+
+        })
+        /**
+         * 分页算法end
+         * EBookSlideContents.vue中，侧边栏可以看到每一章的页数位置所在 » {{item.page}}
+         */
+
         this.setBookAvailable(true)
         //虽然eBookReader中调用了refreshLocation，但是在分页功能加载完毕后才能调用成功
         this.refreshLocation()
@@ -129,6 +172,7 @@ export default {
       this.rendition = this.book.renderTo('read', {
         width: innerWidth,
         height: innerHeight,
+        //阅读模式设置，如果为scroll则是上下滑动，这里没有开发相应功能，default则为左右点击翻页
         method: 'default',
       })
 
@@ -231,8 +275,10 @@ export default {
 
     },
 
-    //手势操作重新编写
+    //手势操作重新编写：上下页的点击或者点击显示功能和菜单栏
     onMaskClick(e) {
+      //电脑的鼠标操作，如果鼠标正在下拉时阻止翻页
+      if (this.mouseState && (this.mouseState === 2 || this.mouseState === 3)) return
       //x轴上的偏移量
       const offsetX = e.offsetX
       const width = window.innerWidth
@@ -261,6 +307,53 @@ export default {
       this.setOffsetY(0)
       this.firstOffsetY = null
     },
+
+
+    //onMouse是电脑鼠标的三个操作
+    //1：鼠标进入
+    //2：鼠标进入后移动
+    //3：鼠标从移动状态松手
+    //4：鼠标还原
+    onMouseEnter(e) {
+      this.mouseState = 1
+      this.mouseStartTime = e.timeStamp
+      e.preventDefault()
+      e.stopPropagation()
+    },
+    onMouseMove(e) {
+      if (this.mouseState === 1) {
+        this.mouseState = 2
+      } else if (this.mouseState === 2) {
+        let offsetY = 0
+        //client浏览器视口内部的坐标
+        if (this.firstOffsetY) {
+          offsetY = e.clientY - this.firstOffsetY
+          this.setOffsetY(offsetY)
+        } else {
+          this.firstOffsetY = e.clientY
+        }
+        e.preventDefault()
+        e.stopPropagation()
+      }
+
+      e.preventDefault()
+      e.stopPropagation()
+    },
+    onMouseEnd(e) {
+      if (this.mouseState === 2) {
+        this.setOffsetY(0)
+        this.firstOffsetY = null
+        this.mouseState = 3
+      } else this.mouseState = 4
+
+      //优化点击的体验
+      const time = e.timeStamp - this.mouseStartTime
+      if (time < 100) this.mouseState = 4
+
+      e.preventDefault()
+      e.stopPropagation()
+    },
+
 
   },
   mounted() {

@@ -204,7 +204,7 @@ export default {
         font-size: px2rem(14);
         line-height: px2rem(16);
         @include left;
-
+        //优化pc端书籍信息一栏的布局
         .slide-contents-book-title-text {
           @include ellipsis2(3);
         }
@@ -216,7 +216,7 @@ export default {
         line-height: px2rem(14);
         margin-top: px2rem(5);
         @include left;
-
+        //优化pc端书籍信息一栏的布局
         .slide-contents-book-author-text {
           @include ellipsis2(1);
         }

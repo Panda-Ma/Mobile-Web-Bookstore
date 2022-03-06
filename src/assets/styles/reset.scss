@@ -23,33 +23,42 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
   display: block;
 }
+
 body {
   line-height: 1;
 }
+
 ol, ul {
   list-style: none;
 }
+
 blockquote, q {
   quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
   content: '';
   content: none;
 }
+
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-html,body{
+
+html, body {
   width: 100%;
   height: 100%;
   user-select: none;
   overflow: hidden;
-  //font-family: ;
+  font-family: 'PingFangSC-Light', 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', 'Arial', 'sans-serif';
+  //移动端高亮显示，设置为0解决微信移动端翻页时屏幕闪烁的问题
+  //-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
