@@ -1,5 +1,6 @@
 import {createStore} from 'vuex'
 import book from './modules/book'
+import store from "@/store/modules/store";
 import getters from './getters'
 import actions from "@/store/actions";
 
@@ -9,6 +10,7 @@ export default createStore({
     mutations: {},
     actions,
     modules: {
-        book
+        book,
+        store
     }
 })

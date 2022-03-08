@@ -4,7 +4,7 @@ const ebook=()=>import ('../views/ebook')
 const routes = [
   {
     path: '/',
-   redirect:'/ebook'
+   redirect:'/bookstore'
   },
   {
     path:'/ebook',
@@ -13,6 +13,18 @@ const routes = [
       {
         path:':fileName',
         component:()=>import('../components/ebook/EBookReader')
+      }
+    ]
+  },
+  {
+    path:'/bookstore',
+    component:()=>import('@/views/bookstore'),
+    redirect: '/bookstore/home',
+    children:[
+      {
+        path:'home',
+        component:()=>import('@/views/bookstore/StoreHome')
+
       }
     ]
   }

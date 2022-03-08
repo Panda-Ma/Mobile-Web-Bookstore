@@ -23,6 +23,7 @@
       }
     },
     methods: {
+      //当外部发生滑动时，监测滑动量的变化
       handleScroll(e) {
         const offsetY = e.target.scrollTop || window.pageYOffset || document.body.scrollTop
         this.$emit('onScroll', offsetY)
@@ -30,6 +31,7 @@
       scrollTo(x, y) {
         this.$refs.scrollWrapper.scrollTo(x, y)
       },
+      //重新计算滚动条的高度
       refresh() {
         if (this.$refs.scrollWrapper) {
           this.$refs.scrollWrapper.style.height = window.innerHeight - realPx(this.top) - realPx(this.bottom) + 'px'
