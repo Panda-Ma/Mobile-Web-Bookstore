@@ -117,6 +117,9 @@ export default {
 
       this.hideHotSearch()
     },
+    showFlapCard(){
+      this.setFlapCardVisible(true)
+    }
 
   }
 

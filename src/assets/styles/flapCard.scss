@@ -30,15 +30,17 @@ $moves: (
         (startX: 0, startY: 0, endX: -40, endY: 35, width: 4, height: 4, background: $color-green-transparent)
 );
 
+//nth map-get 都是scss预设的方法
+//map-get 将$item对象中指定的属性返回
 @mixin move($index) {
   $item: nth($moves, $index);
   $keyframesName: "move" + $index;
   $animationTime: .75s;
   $animationType: linear;
-  $animationIterator: 1;
+  $animationIterator: 1;//改为infinite则为无限循环
   $width: map-get($item, width);
   $height: map-get($item, height);
-  $backgroud: map-get($item, background);
+  $background: map-get($item, background);
   $startX: map-get($item, startX);
   $startY: map-get($item, startY);
   $endX: map-get($item, endX);
@@ -46,7 +48,7 @@ $moves: (
 
   width: px2rem($width);
   height: px2rem($height);
-  background: $backgroud;
+  background: $background;
   animation: #{$keyframesName} $animationTime $animationType $animationIterator;
   @keyframes #{$keyframesName} {
     0% {

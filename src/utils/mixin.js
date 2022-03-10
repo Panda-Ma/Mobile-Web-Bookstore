@@ -1,7 +1,7 @@
 import {mapGetters, mapActions} from "vuex";
 import {addCss, getReadTimeByMinute, removeAllCss, themeList} from "@/utils/book";
 import {getBookmark, saveLocation} from "@/utils/localStorage";
-// import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
+import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
 // import { shelf } from '../api/store'
 
 export const ebookMixin = {

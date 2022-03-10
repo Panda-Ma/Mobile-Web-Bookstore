@@ -63,8 +63,10 @@
 
 <script>
 import {storeHomeMixin} from "@/utils/mixin";
+
 import SearchBar from "@/components/home/SearchBar";
 import Scroll from "@/components/common/Scroll";
+import FlapCard from '@/components/home/FlapCard'
 
 export default {
   name: "StoreHome",
@@ -72,11 +74,15 @@ export default {
   data(){
     return {
       scrollTop:94,
+      categories: null,
+      categoryList: null,
+
     }
   },
   components: {
     SearchBar,
     Scroll,
+    FlapCard
   },
   methods: {
     //这里接受子组件传递的数据，并保存到vuex
