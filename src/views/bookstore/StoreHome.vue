@@ -63,6 +63,7 @@
 
 <script>
 import {storeHomeMixin} from "@/utils/mixin";
+import {home} from "@/api/store";
 
 import SearchBar from "@/components/home/SearchBar";
 import Scroll from "@/components/common/Scroll";
@@ -71,12 +72,12 @@ import FlapCard from '@/components/home/FlapCard'
 export default {
   name: "StoreHome",
   mixins: [storeHomeMixin],
-  data(){
+  data() {
     return {
-      scrollTop:94,
+      scrollTop: 94,
       categories: null,
       categoryList: null,
-
+      random: null
     }
   },
   components: {
@@ -86,16 +87,26 @@ export default {
   },
   methods: {
     //这里接受子组件传递的数据，并保存到vuex
-    onScroll(offsetY){
+    onScroll(offsetY) {
       this.setOffsetY(offsetY)
 
-      if(offsetY>0){
-        this.scrollTop=52
-      }else{
-        this.scrollTop=94
+      if (offsetY > 0) {
+        this.scrollTop = 52
+      } else {
+        this.scrollTop = 94
       }
       this.$refs.scroll.refresh()
     },
+  },
+  mounted() {
+    //利用axios异步请求mockjs中的数据
+    home().then((resp) => {
+      if (resp && resp.status === 200) {
+        const data = resp.data
+        const randomIndex = Math.floor(Math.random()) * data.random.length
+        this.random = data.random[randomIndex]
+      }
+    })
   }
 }
 </script>

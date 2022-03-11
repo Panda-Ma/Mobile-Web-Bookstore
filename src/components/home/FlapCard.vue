@@ -37,11 +37,14 @@
 <script>
 import {storeHomeMixin} from "@/utils/mixin";
 //引入加载动画的对象,需要在data中声明
-import {flapCardList} from "@/utils/store";
+import {flapCardList, categoryText} from "@/utils/store";
 
 export default {
   name: 'FlapCard',
   mixins: [storeHomeMixin],
+  props: {
+    data: Object
+  },
   data() {
     return {
       flapCardList,
@@ -50,7 +53,8 @@ export default {
       intervalTime: 40,
       runFlapCardAnimation: false, //翻页效果
       pointList: null,
-      runPointAnimation: false //烟花效果
+      runPointAnimation: false, //烟花效果
+      runBookCardAnimation: false,
     }
   },
   watch: {
@@ -64,9 +68,6 @@ export default {
     close() {
       this.stopAnimation()
       this.setFlapCardVisible(false)
-    },
-    categoryText() {
-
     },
     semiCircleStyle(item, dir) {
       return {
@@ -96,11 +97,6 @@ export default {
       this.task = setInterval(() => {
         this.flapCardRotate()
       }, this.intervalTime)
-
-      //模拟2.5秒后加载完毕，停止翻页效果
-      setTimeout(() => {
-        this.stopAnimation()
-      }, 2500)
     },
 
     startPointAnimation() {
@@ -178,6 +174,8 @@ export default {
     stopAnimation() {
       this.runFlapCardAnimation = false
       if (this.task) clearInterval(this.task)
+      if(this.timeout)clearInterval(this.timeout)
+      if(this.timeout2)clearInterval(this.timeout2)
       this.reset()
     },
 
@@ -192,14 +190,35 @@ export default {
         this.rotate(index, 'front')
         this.rotate(index, 'back')
       })
+      this.runBookCardAnimation=false
+      this.runFlapCardAnimation=false
+      this.runPointAnimation=false
     },
 
+    //开启动画效果
     runAnimation() {
       this.runFlapCardAnimation = true
       this.timeout = setTimeout(() => {
         this.startFlapCardAnimation()
         this.startPointAnimation()
       }, 300)
+
+      //模拟2.5秒后加载完毕，停止翻页效果
+     this.timeout2= setTimeout(() => {
+        this.stopAnimation()
+        this.runBookCardAnimation=true
+      }, 2500)
+    },
+
+    showBookDetail(book) {
+
+    },
+
+    categoryText() {
+      //由于网路请求是异步操作，有时会暂时获取到data为null
+      if (this.data) {
+        categoryText(this.data.category, this)
+      } else return ''
     }
   },
   created() {

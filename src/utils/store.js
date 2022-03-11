@@ -91,7 +91,7 @@ export function appendAddToShelf(list) {
 export function removeAddFromShelf(list) {
   return list.filter(item => item.type !== 3)
 }
-
+//组件FlapCard中定义的动画效果属性的对象
 export const flapCardList = [
   {
     r: 255,
@@ -174,7 +174,7 @@ export const categoryList = {
   'Psychology': 21,
   'Statistics': 22
 }
-
+//
 export function getCategoryName(id) {
   switch (id) {
     case 1:
@@ -223,7 +223,7 @@ export function getCategoryName(id) {
       return 'Statistics'
   }
 }
-
+//获取国际化文本
 export function categoryText(category, vue) {
   switch (category) {
     case 1:
