@@ -3,49 +3,6 @@
     <search-bar></search-bar>
     <flap-card :data="random"></flap-card>
     <scroll :top="scrollTop" @onScroll="onScroll" ref="scroll">
-
-      <div>
-        <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores consequuntur eius ipsum quaerat! Animi
-          doloremque, dolores enim eos eveniet exercitationem explicabo molestias neque optio placeat quasi, quos sint
-          vel vero?
-        </div>
-        <div>At atque autem consequatur dicta dolor doloremque esse eveniet iste iure laborum minima, minus nihil non
-          obcaecati odit optio placeat praesentium, provident quis quod rerum saepe sequi veritatis voluptas voluptatem.
-        </div>
-        <div>Consequatur consequuntur deleniti dolore doloremque dolorum earum enim explicabo laudantium minus neque
-          nesciunt officiis omnis, quam reprehenderit ut velit veritatis voluptas voluptate. Accusamus dicta laboriosam
-          libero nemo obcaecati quod repellat.
-        </div>
-        <div>Aliquid at deleniti, dignissimos doloremque eligendi error fugit hic ipsa molestias non provident quas
-          quisquam repellat rerum saepe sit tempore temporibus, ut voluptatibus voluptatum! Culpa cumque deleniti
-          dolorum eaque et?
-        </div>
-        <div>Alias incidunt laborum laudantium maiores natus non numquam omnis quasi recusandae ullam. Asperiores
-          commodi esse incidunt ipsum iste itaque laudantium modi natus neque porro, quaerat, saepe similique sint
-          temporibus vero!
-        </div>
-        <div>Cupiditate fugiat laudantium nemo repudiandae tempora veritatis voluptatibus? Ad aspernatur blanditiis
-          cupiditate eius fuga fugiat in maxime nam officia quo rerum sapiente sed suscipit, vero voluptates. Cupiditate
-          facilis itaque provident!
-        </div>
-        <div>Assumenda beatae deserunt dolores explicabo facere numquam omnis sed! Eveniet fuga labore laudantium?
-          Blanditiis commodi culpa ducimus eum eveniet, harum labore numquam odio porro praesentium quas quibusdam
-          quisquam sapiente tempore?
-        </div>
-        <div>A error explicabo in iure laboriosam, praesentium recusandae sit suscipit tempore veritatis! Ad asperiores
-          consectetur cum deleniti ducimus eaque enim esse id ipsum, iste iure nostrum, quasi saepe, voluptate
-          voluptates!
-        </div>
-        <div>Adipisci autem commodi iste! Aperiam ea illo laboriosam laborum maiores rerum suscipit? Ad, animi aperiam
-          atque autem deserunt dignissimos hic illum ipsam libero molestias mollitia nam placeat, tempore, unde
-          voluptatum!
-        </div>
-        <div>Deleniti iste maiores maxime officiis provident quaerat quo reiciendis suscipit temporibus? Accusantium,
-          aliquam, architecto aspernatur consequuntur eligendi exercitationem explicabo impedit in mollitia nobis odit
-          quia quis repudiandae similique sunt vero.
-        </div>
-      </div>
-
       <div class="banner-wrapper">
         <div class="banner-img" :style="{backgroundImage:`url('${banner}')`}"></div>
       </div>
@@ -68,6 +25,14 @@ import {home} from "@/api/store";
 import SearchBar from "@/components/home/SearchBar";
 import Scroll from "@/components/common/Scroll";
 import FlapCard from '@/components/home/FlapCard'
+import GuessYouLike from '@/components/home/GuessYouLike'
+import Recommend from "@/components/home/Recommend";
+import Featured from "@/components/home/Featured";
+import CategoryBook from "@/components/home/CategoryBook";
+import Category from "@/components/home/Category";
+import {categories} from "@/mock/bookHome";
+
+
 
 export default {
   name: "StoreHome",
@@ -77,13 +42,22 @@ export default {
       scrollTop: 94,
       categories: null,
       categoryList: null,
-      random: null
+      random: null,
+      banner:null,
+      guessYouLike:null,
+      recommend:null,
+      featured:null
     }
   },
   components: {
     SearchBar,
     Scroll,
-    FlapCard
+    FlapCard,
+    GuessYouLike,
+    Recommend,
+    Featured,
+    CategoryBook,
+    Category,
   },
   methods: {
     //这里接受子组件传递的数据，并保存到vuex
@@ -105,6 +79,12 @@ export default {
         const data = resp.data
         const randomIndex = Math.floor(Math.random()) * data.random.length
         this.random = data.random[randomIndex]
+        this.banner=data.banner
+        this.guessYouLike=data.guessYouLike
+        this.featured=data.featured
+        this.recommend=data.recommend
+        this.categories=data.categories
+        this.categoryList=data.categoryList
       }
     })
   }
