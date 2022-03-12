@@ -1,8 +1,8 @@
 import {mapGetters, mapActions} from "vuex";
 import {addCss, getReadTimeByMinute, removeAllCss, themeList} from "@/utils/book";
-import {getBookmark, saveLocation} from "@/utils/localStorage";
+import {getBookmark, getBookShelf, saveBookShelf, saveLocation} from "@/utils/localStorage";
 import { gotoBookDetail, appendAddToShelf, computeId, removeAddFromShelf } from './store'
-// import { shelf } from '../api/store'
+import { shelf } from '../api/store'
 
 export const ebookMixin = {
     computed: {
@@ -147,6 +147,7 @@ export const storeHomeMixin = {
             'setFlapCardVisible'
         ]),
         showBookDetail(book) {
+            //路由跳转
             gotoBookDetail(this, book)
         }
     }

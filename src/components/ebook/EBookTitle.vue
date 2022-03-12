@@ -27,7 +27,7 @@ export default {
   mixins: [ebookMixin],
   methods: {
     back() {
-
+      this.$router.go(-1)
     }
   }
 }

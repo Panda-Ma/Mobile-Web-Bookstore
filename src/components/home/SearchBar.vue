@@ -24,7 +24,10 @@
                  :placeholder="$t('home.hint')"
                  v-model="searchText"
                  @click="showHotSearch"
-                 @keyup.13.exact="search">
+                 @keypress.enter.exact="search()">
+          <!--       13：回车键 exact：只能点击该键，其他键无效。    -->
+          <!--          vue新版本不再支持使用数字 (即键码) 作为 v-on 修饰符，可以查看 按键修饰符-->
+          <!--          原本这里用的是keyup，但是keyup在输入中文时按下回车就会自动提交，影响实际使用-->
         </div>
       </div>
     </div>
@@ -117,8 +120,17 @@ export default {
 
       this.hideHotSearch()
     },
-    showFlapCard(){
+    showFlapCard() {
       this.setFlapCardVisible(true)
+    },
+    search() {
+      console.log(this.searchText);
+      this.$router.push({
+        path: '/store/list',
+        query: {
+          keyword: this.searchText
+        }
+      })
     }
 
   }

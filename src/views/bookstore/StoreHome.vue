@@ -74,6 +74,7 @@ export default {
   },
   mounted() {
     //利用axios异步请求mockjs中的数据
+    //home方法是api/store下定义的axios请求
     home().then((resp) => {
       if (resp && resp.status === 200) {
         const data = resp.data

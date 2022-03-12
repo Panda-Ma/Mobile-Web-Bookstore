@@ -4,7 +4,7 @@ const ebook=()=>import ('../views/ebook')
 const routes = [
   {
     path: '/',
-   redirect:'/bookstore'
+   redirect:'/store'
   },
   {
     path:'/ebook',
@@ -17,15 +17,23 @@ const routes = [
     ]
   },
   {
-    path:'/bookstore',
+    path:'/store',
     component:()=>import('@/views/bookstore'),
-    redirect: '/bookstore/home',
+    redirect: '/store/home',
     children:[
       {
         path:'home',
         component:()=>import('@/views/bookstore/StoreHome')
+      },
+      {
+        path:'list',
+        component:()=>import('@/views/bookstore/StoreList')
+      },
+      {
+        path: 'detail',
+        component:()=>import('@/views/bookstore/StoreDetail')
+      },
 
-      }
     ]
   }
 ]
