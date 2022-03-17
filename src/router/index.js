@@ -19,7 +19,7 @@ const routes = [
   {
     path:'/store',
     component:()=>import('@/views/bookstore'),
-    redirect: '/store/home',
+    redirect: '/store/home/shelf',
     children:[
       {
         path:'home',
@@ -33,7 +33,10 @@ const routes = [
         path: 'detail',
         component:()=>import('@/views/bookstore/StoreDetail')
       },
-
+      {
+        path:'shelf',
+        component:()=>import('@/views/bookstore/StoreShelf')
+      }
     ]
   }
 ]

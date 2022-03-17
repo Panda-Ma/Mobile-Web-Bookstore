@@ -16,7 +16,7 @@
 
 <script>
   import ShelfTitle from '../../components/shelf/ShelfTitle'
-  import { storeShelfMixin } from '../../utils/mixin'
+  import { storeShelfMixin } from '@/utils/mixin'
   import Scroll from '../../components/common/Scroll'
   import ShelfSearch from '../../components/shelf/ShelfSearch'
   import ShelfList from '../../components/shelf/ShelfList'
@@ -35,6 +35,8 @@
       // 监听编辑模式，编辑模式下滚动条距底部需要产生48像素的距离
       isEditMode(isEditMode) {
         this.scrollBottom = isEditMode ? 48 : 0
+        //点击编辑模式后，界面会发生一些dom操作，此时界面尚未完全更新，需要在dom操作之后调用refresh
+        //
         this.$nextTick(() => {
           this.$refs.scroll.refresh()
         })

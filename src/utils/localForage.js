@@ -1,5 +1,7 @@
 import localForage from 'localforage'
 
+//IndexDB:离线缓存
+
 export function setLocalForage(key, data, cb, cb2) {
   localForage.setItem(key, data).then((value) => {
     if (cb) cb(value)
