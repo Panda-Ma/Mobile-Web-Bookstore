@@ -23,6 +23,7 @@ import {
   saveFontSize, saveTheme
 } from "@/utils/localStorage";
 import {flatten} from "@/utils/book";
+import {getLocalForage} from "@/utils/localForage";
 
 
 global.ePub = Epub
@@ -56,9 +57,8 @@ export default {
       this.setFontFamilyVisible(false)
     },
 
-    initEpub() {
-      //this.fileName是computed中的mappGetters通过Getter取到的
-      const url = `${process.env.VUE_APP_RES_URL}/epub/` + this.fileName + '.epub'
+    initEpub(url) {
+
 
       //实例化book对象
       this.book = new Epub(url)
@@ -89,8 +89,8 @@ export default {
           this.navigation.forEach(nav => {
             if (nav.href) {
               //xxx.html
-              const href = nav.href.match(/^(.*)\.html$/)[1]
-              if (href === loc) {
+              const href = nav.href.match(/^(.*)\.html$/)
+              if (href && href[1] === loc) {
                 nav.pagelist.push(item)
               }
             }
@@ -98,12 +98,12 @@ export default {
 
           //这里已经把每一章的分页放到navigation中，但是接下来需要计算章节开始的页数所在
           let currentPage = 1
-          this.navigation.forEach((nav,index)=>{
+          this.navigation.forEach((nav, index) => {
             //第一章从第一页开始
-            if(index===0)nav.page=1
+            if (index === 0) nav.page = 1
             //加上 上一章的页数
-            else nav.page=currentPage
-            currentPage+=nav.pagelist.length+1
+            else nav.page = currentPage
+            currentPage += nav.pagelist.length + 1
           })
 
         })
@@ -357,11 +357,28 @@ export default {
 
   },
   mounted() {
-    const fileName = this.$route.params.fileName.split('|').join('/')
-    //保存书名到vuex
-    this.setFileName(fileName).then(() => {
-      this.initEpub()
+    //网络url中有参数 种类｜书名
+    const books = this.$route.params.fileName.split('|')
+    const fileName = books[1]
+    //  书名作为key值
+    getLocalForage(fileName, (err, blob) => {
+      //IndexDB中获取，blob为结果
+      if (!err && blob) {
+        this.setFileName(books.join('/')).then(() => {
+          this.initEpub(blob)
+          // console.log('本地加载成功');
+        })
+      }
+      //在线获取
+      else {
+        this.setFileName(books.join('/')).then(() => {
+          const url = `${process.env.VUE_APP_RES_URL}/epub/` + this.fileName + '.epub'
+          this.initEpub(url)
+          // console.log('在线加载成功');
+        })
+      }
     })
+
   }
 }
 </script>

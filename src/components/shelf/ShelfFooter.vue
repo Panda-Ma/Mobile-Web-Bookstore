@@ -18,6 +18,7 @@
     </div>
     <teleport to="#app">
       <toast ref="toast"></toast>
+      <group-dialog ref="groupDialog"></group-dialog>
     </teleport>
   </div>
 </template>
@@ -29,10 +30,16 @@ import {download} from '@/api/store'
 import {removeLocalForage} from '@/utils/localForage'
 import Popup from "@/components/common/Popup";
 import Toast from "@/components/common/Toast";
+import GroupDialog from "@/components/shelf/ShelfGroupDialog";
 
 export default {
-  components: {Toast, Popup},
+  components: {GroupDialog, Toast, Popup},
   mixins: [storeShelfMixin],
+  props: {
+    category: {
+      default: null
+    }
+  },
   computed: {
     isSelected() {
       return this.shelfSelected && this.shelfSelected.length > 0
@@ -85,7 +92,9 @@ export default {
     }
   },
   methods: {
+    //下载所选书籍
     async downloadSelectedBook() {
+      //这里不能使用promise.all ，因为无法保证下载的时候进度条按照下载顺序显示
       for (let i = 0; i < this.shelfSelected.length; i++) {
         await this.downloadBook(this.shelfSelected[i])
             .then(book => {
@@ -93,6 +102,7 @@ export default {
             })
       }
     },
+    //下载指定的书籍并显示进度
     downloadBook(book) {
       this.$refs.toast.continueShow()
       return new Promise((resolve, reject) => {
@@ -108,6 +118,7 @@ export default {
       })
     },
     removeSelectedBook() {
+      //移除电子书可以使用promise.all
       Promise.all(this.shelfSelected.map(book => this.removeBook(book)))
           .then(books => {
             books.map(book => {
@@ -117,6 +128,8 @@ export default {
             this.simpleToast(this.$t('shelf.removeDownloadSuccess'))
           })
     },
+    //移除localStorage
+    //移除IndexDB
     removeBook(book) {
       return new Promise((resolve, reject) => {
         removeLocalStorage(`${book.categoryText}/${book.fileName}-info`)
@@ -153,17 +166,23 @@ export default {
     },
     async setDownload() {
       this.onComplete()
-      if (this.isDownload) {
-        this.removeSelectedBook()
+      if (this.isDownload) { //computed，判断所选的图书列表是否已下载
+        this.removeSelectedBook() //如果已下载则为删除图书
       } else {
         await this.downloadSelectedBook() //异步方法 改为 同步，不然会对下面toast的同步方法造成影响
-        saveBookShelf(this.shelfList)
+        saveBookShelf(this.shelfList)  //保存到loacl Storage
         this.simpleToast(this.$t('shelf.setDownloadSuccess')) //同步方法
       }
     },
     removeSelected() {
       this.shelfSelected.forEach(selected => {
-        this.setShelfList(this.shelfList.filter(book => book !== selected))
+        //在书架移除书籍
+        if (!this.category) this.setShelfList(this.shelfList.filter(book => book !== selected))
+        //在书架分类移除书籍
+        else {
+          let idx = this.category.itemList.indexOf(selected)
+          this.category.itemList.splice(idx,1)
+        }
       })
       this.setShelfSelected([])
       this.onComplete()
@@ -239,7 +258,7 @@ export default {
           this.showDownload() //开启离线下载
           break
         case 3:
-          this.dialog().show() //移动到
+          this.dialog() //移动到
           break
         case 4:
           this.showRemove() //移出书架
@@ -261,6 +280,9 @@ export default {
     simpleToast(text) {
       this.$refs.toast.show()
       this.$refs.toast.updateText(text)
+    },
+    dialog() {
+      this.$refs.groupDialog.show()
     }
   }
 }

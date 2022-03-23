@@ -186,33 +186,19 @@ export const storeShelfMixin = {
             })
         },
         getShelfList() {
-            let shelfList = getBookShelf()
+            let shelfList = getBookShelf()       // 请求localStorage中的数据
             if (!shelfList) {
+                //如果没有从mock中获取
                 shelf().then(response => {
                     if (response.status === 200 && response.data && response.data.bookList) {
                         shelfList = appendAddToShelf(response.data.bookList)
-                        saveBookShelf(shelfList)
-                        return this.setShelfList(shelfList)
+                        saveBookShelf(shelfList) //保存到localStorage
+                        return this.setShelfList(shelfList) //保存到vuex
                     }
                 })
             } else {
-                return this.setShelfList(shelfList)
+                return this.setShelfList(shelfList) //保存到vuex
             }
         },
-        moveOutOfGroup(f) {
-            this.setShelfList(this.shelfList.map(book => {
-                if (book.type === 2 && book.itemList) {
-                    book.itemList = book.itemList.filter(subBook => !subBook.selected)
-                }
-                return book
-            })).then(() => {
-                const list = computeId(appendAddToShelf([].concat(
-                    removeAddFromShelf(this.shelfList), ...this.shelfSelected)))
-                this.setShelfList(list).then(() => {
-                    this.simpleToast(this.$t('shelf.moveBookOutSuccess'))
-                    if (f) f()
-                })
-            })
-        }
     }
 }

@@ -36,6 +36,10 @@ const routes = [
       {
         path:'shelf',
         component:()=>import('@/views/bookstore/StoreShelf')
+      },
+      {
+        path:'category',
+        component:()=>import('@/views/bookstore/StoreCategory')
       }
     ]
   }

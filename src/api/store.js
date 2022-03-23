@@ -53,7 +53,7 @@ export function download(book, onSuccess, onError, onProgress) {
     }).get(`${book.categoryText}/${book.fileName}.epub`)
         .then(res => {
             const blob = new Blob([res.data])
-            //传入两个回调函数
+            //传入两个回调函数并保存IndexDB
             setLocalForage(book.fileName, blob,
                 () => {
                     if (onSuccess) onSuccess(book)

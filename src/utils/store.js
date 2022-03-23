@@ -79,7 +79,7 @@ export function gotoStoreHome(vue) {
     path: '/store/home'
   })
 }
-
+//追加+号
 export function appendAddToShelf(list) {
   list.push({
     id: -1,
@@ -87,7 +87,7 @@ export function appendAddToShelf(list) {
   })
   return list
 }
-
+//移除+号
 export function removeAddFromShelf(list) {
   return list.filter(item => item.type !== 3)
 }
