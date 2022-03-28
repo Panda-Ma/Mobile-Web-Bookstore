@@ -56,7 +56,6 @@
     mounted() {
       // 获取书架列表数据
       this.getShelfList()
-      console.log(this.shelfList);
       // 初始化书架分类数据
       this.setShelfCategory([])
       // 设置vuex的currentType为1，表示当前位于书架，影响ShelfTitle状态

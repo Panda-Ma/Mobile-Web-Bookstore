@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 const ebook=()=>import ('../views/ebook')
 
 const routes = [
@@ -19,7 +19,7 @@ const routes = [
   {
     path:'/store',
     component:()=>import('@/views/bookstore'),
-    redirect: '/store/home/shelf',
+    redirect: '/store/shelf',
     children:[
       {
         path:'home',
@@ -40,13 +40,17 @@ const routes = [
       {
         path:'category',
         component:()=>import('@/views/bookstore/StoreCategory')
+      },
+      {
+        path:'speaking',
+        component:()=>import('@/views/bookstore/StoreSpeaking')
       }
     ]
   }
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes
 })
 
