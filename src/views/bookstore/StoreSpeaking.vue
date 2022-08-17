@@ -396,6 +396,7 @@ export default {
     // 通过API找到当前电子书的详情数据
     findBookFromList(fileName) {
       flatList().then(response => {
+        console.log('响应成功');
         if (response.status === 200) {
           const bookList = response.data.data.filter(item => item.fileName === fileName)
           if (bookList && bookList.length > 0) {
@@ -409,6 +410,7 @@ export default {
     init() {
       const fileName = this.$route.query.fileName
       if (!this.bookItem) {
+        // 不存在时从localstorage获取
         this.bookItem = findBook(fileName)
       }
       if (this.bookItem) {

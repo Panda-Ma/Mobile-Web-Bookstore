@@ -59,7 +59,6 @@ export default {
 
     initEpub(url) {
 
-
       //实例化book对象
       this.book = new Epub(url)
       this.setCurrentBook(this.book)
