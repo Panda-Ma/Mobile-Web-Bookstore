@@ -104,13 +104,15 @@ export default {
         }
       })
     },
-    //epubjs支持的全局搜索方法
+    //epubjs支持的全文搜索方法
     doSearch(q) {
       return Promise.all(
+          //spineItem对应section，即一个章节
           this.currentBook.spine.spineItems.map(
               section => section.load(this.currentBook.load.bind(this.currentBook))
-                  .then(section.find.bind(section, q))
+                  .then(section.find.bind(section, q)) //调用section.find，传入关键字
                   .finally(section.unload.bind(section)))//释放资源
+
       ).then(results => Promise.resolve([].concat.apply([], results)))
       //[].concat.apply([], results) 将一个二维数组合并为一个一维数组
     },

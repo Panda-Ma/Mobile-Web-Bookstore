@@ -1,7 +1,7 @@
 import axios from "axios";
 import {setLocalForage} from "@/utils/localForage";
 
-//这里是axios请求的接口
+//home、shelf、detail三个方法分别为3个页面的初始化
 export function home() {
     return axios({
         method: 'get',
@@ -20,7 +20,7 @@ export function detail(book) {
     return axios({
         method: 'get',
         //请求线上的api接口 书籍详情页的信息
-        url: `${process.env.VUE_APP_BOOK_URL}/book/detail`,
+        url: `${process.env.VUE_APP_BASE_URL}/book/detail`,
         params: {
             fileName: book.fileName
         }
@@ -71,6 +71,6 @@ export function download(book, onSuccess, onError, onProgress) {
 export function flatList() {
     return axios({
         method: 'get',
-        url: `${process.env.VUE_APP_BOOK_URL}/book/flat-list`
+        url: `${process.env.VUE_APP_BASE_URL}/book/flat-list` //本来是 VUE_APP_BOOK_URL=http://47.99.166.157:3000
     })
 }
